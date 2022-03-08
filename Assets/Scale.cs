@@ -5,26 +5,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Scale : MonoBehaviour
+public class Scale : Transformation
 {
-    private Button applyButton;
-
-    private TMP_InputField input;
 
     [SerializeField] private bool isX; // true for scale on X false for Y i'm short on time
 
-    private TransformTarget target;
 
-    // Start is called before the first frame update
-    void Awake()
-    {
-        applyButton = GetComponentInChildren<Button>();
-        input = GetComponentInChildren<TMP_InputField>();
-        target = FindObjectOfType<TransformTarget>();
-        applyButton.onClick.AddListener(Apply);
-    }
-
-    public void Apply()
+    public override void Apply()
     {
         var val = float.Parse(input.text);
         // Matrix4x4 mat;
