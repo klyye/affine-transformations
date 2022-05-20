@@ -10,32 +10,38 @@ public class Scale : Transformation
 
     [SerializeField] private bool isX; // true for scale on X false for Y i'm short on time
 
+    public void ScaleAround(GameObject target, Vector3 pivot, Vector3 newScale)
+    {
+        Vector3 A = target.transform.localPosition;
+        Vector3 B = pivot;
+     
+        Vector3 C = A - B; // diff from object pivot to desired pivot/origin
+     
+        float RS = newScale.x / target.transform.localScale.x; // relative scale factor
+     
+        // calc final position post-scale
+        Vector3 FP = B + C * RS;
+     
+        // finally, actually perform the scale/translation
+        target.transform.localScale = newScale;
+        target.transform.localPosition = FP;
+    }
+ 
 
     public override void Apply()
     {
         var val = float.Parse(input.text);
-        // Matrix4x4 mat;
         if (isX) // this is ass, if i had more time i would use some sort of vector representing axis
         {
-            // mat = new Matrix4x4(
-            //     new Vector4(val, 0, 0, 0), 
-            //     new Vector4(0, 1, 0, 0),
-            //     new Vector4(0, 0, 1, 0),
-            //     new Vector4(0, 0, 0, 1)
-            //     );
             var origScale = target.transform.localScale;
-            target.transform.localScale = new Vector3(origScale.x * val, origScale.y, origScale.z);
+            var newScale = new Vector3(origScale.x * val, origScale.y, origScale.z);
+            ScaleAround(target.gameObject, Vector3.zero, newScale);
         }
         else
         {
-            // mat = new Matrix4x4(
-            //     new Vector4(1, 0, 0, 0), 
-            //     new Vector4(0, val, 0, 0),
-            //     new Vector4(0, 0, 1, 0),
-            //     new Vector4(0, 0, 0, 1)
-            //     );
             var origScale = target.transform.localScale;
-            target.transform.localScale = new Vector3(origScale.x, val * origScale.y, origScale.z);
+            var newScale = new Vector3(origScale.x, val * origScale.y, origScale.z);
+            ScaleAround(target.gameObject, Vector3.zero, newScale);
         }
     }
 }
